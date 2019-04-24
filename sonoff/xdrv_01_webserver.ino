@@ -336,6 +336,8 @@ const char HTTP_FORM_OTHER[] PROGMEM =
   "<b>" D_WEB_ADMIN_PASSWORD "</b><br/><input id='p1' name='p1' type='password' placeholder='" D_WEB_ADMIN_PASSWORD "' value='" D_ASTERIX "'><br/>"
   "<br>"
   "<input id='b1' name='b1' type='checkbox'%s><b>" D_MQTT_ENABLE "</b><br/>"
+  // erocm123: Additional button for Hubitat / SmartThings support
+  "<input id='h1' name='h1' type='checkbox'%s><b>" D_HUBITAT_SMARTTHINGS_ENABLE "</b><br/>"
   "<br/>";
 
 const char HTTP_FORM_END[] PROGMEM =
@@ -1441,7 +1443,7 @@ void HandleOtherConfiguration(void)
   TemplateJson();
   char stemp[strlen(mqtt_data) +1];
   strlcpy(stemp, mqtt_data, sizeof(stemp));  // Get JSON template
-  WSContentSend_P(HTTP_FORM_OTHER, stemp, (USER_MODULE == Settings.module) ? " checked disabled" : "", (Settings.flag.mqtt_enabled) ? " checked" : "");
+  WSContentSend_P(HTTP_FORM_OTHER, stemp, (USER_MODULE == Settings.module) ? " checked disabled" : "", (Settings.flag.mqtt_enabled) ? " checked" : "", (Settings.flag3.hubitat_enabled) ? " checked" : "");
 
   uint8_t maxfn = (devices_present > MAX_FRIENDLYNAMES) ? MAX_FRIENDLYNAMES : (!devices_present) ? 1 : devices_present;
   if (SONOFF_IFAN02 == my_module_type) { maxfn = 1; }
@@ -1481,6 +1483,8 @@ void OtherSaveSettings(void)
   WebGetArg("p1", tmp, sizeof(tmp));
   strlcpy(Settings.web_password, (!strlen(tmp)) ? "" : (strchr(tmp,'*')) ? Settings.web_password : tmp, sizeof(Settings.web_password));
   Settings.flag.mqtt_enabled = WebServer->hasArg("b1");
+  // erocm123: Saves the variable "true or false" of whether the user has enabled Hubitat support
+  Settings.flag3.hubitat_enabled = WebServer->hasArg("h1");
 #ifdef USE_EMULATION
   WebGetArg("b2", tmp, sizeof(tmp));
   Settings.flag2.emulation = (!strlen(tmp)) ? 0 : atoi(tmp);

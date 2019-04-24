@@ -435,6 +435,8 @@ void HandleUpnpSetupWemo(void)
  * Hue web server additions
 \*********************************************************************************************/
 
+//erocm123: Changes for Hubitat / SmartThings discovery
+
 const char HUE_DESCRIPTION_XML[] PROGMEM =
   "<?xml version=\"1.0\"?>"
   "<root xmlns=\"urn:schemas-upnp-org:device-1-0\">"
@@ -446,11 +448,11 @@ const char HUE_DESCRIPTION_XML[] PROGMEM =
   "<URLBase>http://{x1:80/</URLBase>"
   "<device>"
     "<deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>"
-    "<friendlyName>Amazon-Echo-HA-Bridge ({x1)</friendlyName>"
+    "<friendlyName>{x4</friendlyName>"
 //    "<friendlyName>Philips hue ({x1)</friendlyName>"
-    "<manufacturer>Royal Philips Electronics</manufacturer>"
-    "<modelDescription>Philips hue Personal Wireless Lighting</modelDescription>"
-    "<modelName>Philips hue bridge 2012</modelName>"
+    "<manufacturer>iTead</manufacturer>"
+    "<modelDescription>iTead Intelligent Systems Co., LTD</modelDescription>"
+    "<modelName>{x4</modelName>"
     "<modelNumber>929000226503</modelNumber>"
     "<serialNumber>{x3</serialNumber>"
     "<UDN>uuid:{x2</UDN>"
@@ -530,8 +532,11 @@ void HandleUpnpSetupHue(void)
   description_xml.replace("{x1", WiFi.localIP().toString());
   description_xml.replace("{x2", HueUuid());
   description_xml.replace("{x3", HueSerialnumber());
+  description_xml.replace("{x4", kModules[Settings.module].name);
   WSSend(200, CT_XML, description_xml);
 }
+
+
 
 void HueNotImplemented(String *path)
 {

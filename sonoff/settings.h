@@ -94,7 +94,8 @@ typedef union {                            // Restricted by MISRA-C Rule 18.4 bu
     uint32_t spare28 : 1;
     uint32_t spare29 : 1;
     uint32_t spare30 : 1;
-    uint32_t spare31 : 1;
+    // erocm123: Variable to specify whether Hubitat is enabled. Choosing last spare in case Tasmota adds more variables.
+    uint32_t hubitat_enabled : 1;   
   };
 } SysBitfield3;
 
@@ -349,6 +350,8 @@ struct SYSCFG {
   uint16_t      web_refresh;               // 7CC
   char          mems[MAX_RULE_MEMS][10];   // 7CE
   char          rules[MAX_RULE_SETS][MAX_RULE_SIZE]; // 800 uses 512 bytes in v5.12.0m, 3 x 512 bytes in v5.14.0b
+  char          hubitat_host[33];             // 1E9
+  uint16_t      hubitat_port;                 // 20A
                                            // E00 - FFF free locations
 } Settings;
 
