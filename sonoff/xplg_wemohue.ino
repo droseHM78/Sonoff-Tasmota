@@ -138,17 +138,20 @@ String HueBridgeId(void)
   return bridgeid;  // 5CCF7FFFFE139F3D
 }
 
+// erocm123: some UUID changes because hubitat isn't responding correctly to M-SEARCH
 String HueSerialnumber(void)
 {
   String serial = WiFi.macAddress();
   serial.replace(":", "");
   serial.toLowerCase();
-  return serial;  // 5ccf7f139f3d
+  //return serial;  // 5ccf7f139f3d
+  return serial.substring(6);  // 5ccf7f139f3d
 }
 
 String HueUuid(void)
 {
-  String uuid = F("f6543a06-da50-11ba-8d8f-");
+  //String uuid = F("f6543a06-da50-11ba-8d8f-");
+  String uuid = F("38323636-4558-4dda-9188-cda0e6");
   uuid += HueSerialnumber();
   return uuid;  // f6543a06-da50-11ba-8d8f-5ccf7f139f3d
 }
@@ -435,8 +438,6 @@ void HandleUpnpSetupWemo(void)
  * Hue web server additions
 \*********************************************************************************************/
 
-//erocm123: Changes for Hubitat / SmartThings discovery
-
 const char HUE_DESCRIPTION_XML[] PROGMEM =
   "<?xml version=\"1.0\"?>"
   "<root xmlns=\"urn:schemas-upnp-org:device-1-0\">"
@@ -449,11 +450,14 @@ const char HUE_DESCRIPTION_XML[] PROGMEM =
   "<device>"
     "<deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>"
     "<friendlyName>{x4</friendlyName>"
+    "<presentationURL>index.html</presentationURL>"
 //    "<friendlyName>Philips hue ({x1)</friendlyName>"
     "<manufacturer>iTead</manufacturer>"
+    "<manufacturerURL>http://smartlife.tech</manufacturerURL>"
     "<modelDescription>iTead Intelligent Systems Co., LTD</modelDescription>"
     "<modelName>{x4</modelName>"
     "<modelNumber>929000226503</modelNumber>"
+    "<modelURL>http://smartlife.tech</modelURL>"
     "<serialNumber>{x3</serialNumber>"
     "<UDN>uuid:{x2</UDN>"
   "</device>"

@@ -19,6 +19,8 @@
 
 #define XDRV_95                95
 
+#include <ESP8266SSDP.h>
+
 unsigned long hubitatConnectionFailures;
 unsigned long hubitatFailureTimeout = millis();
 
@@ -84,6 +86,13 @@ boolean hubitatPublish() {
   }
 
   return success;
+}
+
+String deblank(const char* input)
+{
+  String output = String(input);
+  output.replace(" ", "");
+  return output;
 }
 
 /*********************************************************************************************\
@@ -212,6 +221,26 @@ bool Xdrv95(uint8_t function)
   if (Settings.flag3.hubitat_enabled) {
     switch (function) {
 #ifdef USE_WEBSERVER
+      case FUNC_INIT:
+
+        SSDP.setSchemaURL("description.xml");
+        SSDP.setHTTPPort(80);
+        //SSDP.setName(kModules[Settings.module].name);
+        SSDP.setName("Sonoff S2X");
+        SSDP.setSerialNumber(ESP.getChipId());
+        SSDP.setURL("index.html");
+        //SSDP.setModelName(kModules[Settings.module].name);
+        SSDP.setModelName("Sonoff S2X");
+        //SSDP.setModelNumber(deblank(kModules[Settings.module].name) + "_SL");
+        SSDP.setModelNumber("SonoffS2X_SL");
+        SSDP.setModelURL("http://smartlife.tech");
+        SSDP.setManufacturer("Smart Life Automated");
+        SSDP.setManufacturerURL("http://smartlife.tech");
+        SSDP.begin();
+      break;
+      case FUNC_LOOP:
+
+        break;
       case FUNC_COMMAND:
         result = HubitatCommand();
         break;
