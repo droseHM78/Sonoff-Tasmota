@@ -64,8 +64,7 @@ bool UdpConnect(void)
       udp_response_mutex = false;
       udp_connected = true;
     } else {
-      // erocm123: suppressing log while working on Hubitat / SmartThings device discovery 
-      //AddLog_P(LOG_LEVEL_INFO, PSTR(D_LOG_UPNP D_MULTICAST_JOIN_FAILED));
+      AddLog_P(LOG_LEVEL_INFO, PSTR(D_LOG_UPNP D_MULTICAST_JOIN_FAILED));
       udp_connected = false;
     }
   }

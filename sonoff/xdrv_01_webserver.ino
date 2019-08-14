@@ -391,8 +391,6 @@ const char HTTP_FORM_OTHER[] PROGMEM =
   "<b>" D_WEB_ADMIN_PASSWORD "</b><input type='checkbox' onclick='sp(\"wp\")'><br><input id='wp' type='password' placeholder='" D_WEB_ADMIN_PASSWORD "' value='" D_ASTERISK_PWD "'><br>"
   "<br>"
   "<input id='b1' type='checkbox'%s><b>" D_MQTT_ENABLE "</b><br>"
-  // erocm123: Additional button for Hubitat / SmartThings support
-  "<input id='h1' name='h1' type='checkbox'%s><b>" D_HUBITAT_SMARTTHINGS_ENABLE "</b><br/>"
   "<br>";
 
 const char HTTP_FORM_END[] PROGMEM =
@@ -1620,8 +1618,6 @@ void OtherSaveSettings(void)
   WebGetArg("wp", tmp, sizeof(tmp));
   strlcpy(Settings.web_password, (!strlen(tmp)) ? "" : (strchr(tmp,'*')) ? Settings.web_password : tmp, sizeof(Settings.web_password));
   Settings.flag.mqtt_enabled = WebServer->hasArg("b1");
-  // erocm123: Saves the variable "true or false" of whether the user has enabled Hubitat support
-  Settings.flag3.hubitat_enabled = WebServer->hasArg("h1");
 #ifdef USE_EMULATION
   WebGetArg("b2", tmp, sizeof(tmp));
   Settings.flag2.emulation = (!strlen(tmp)) ? 0 : atoi(tmp);
