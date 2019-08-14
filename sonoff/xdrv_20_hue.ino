@@ -59,12 +59,14 @@ String HueBridgeId(void)
   return bridgeid;  // 5CCF7FFFFE139F3D
 }
 
+// erocm123: some UUID changes because hubitat isn't responding correctly to M-SEARCH
 String HueSerialnumber(void)
 {
   String serial = WiFi.macAddress();
   serial.replace(":", "");
   serial.toLowerCase();
-  return serial;  // 5ccf7f139f3d
+  //return serial;  // 5ccf7f139f3d
+  return serial.substring(6);  // 5ccf7f139f3d
 }
 
 String HueUuid(void)
