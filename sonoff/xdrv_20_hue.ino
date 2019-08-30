@@ -69,9 +69,11 @@ String HueSerialnumber(void)
   return serial.substring(6);  // 5ccf7f139f3d
 }
 
+// erocm123: Returning different uuid
 String HueUuid(void)
 {
-  String uuid = F("f6543a06-da50-11ba-8d8f-");
+  //String uuid = F("f6543a06-da50-11ba-8d8f-");
+  String uuid = F("38323636-4558-4dda-9188-cda0e6");
   uuid += HueSerialnumber();
   return uuid;  // f6543a06-da50-11ba-8d8f-5ccf7f139f3d
 }
@@ -112,6 +114,7 @@ void HueRespondToMSearch(void)
  * Hue web server additions
 \*********************************************************************************************/
 
+// erocm123: modify for Hubitat / SmartThings detection
 const char HUE_DESCRIPTION_XML[] PROGMEM =
   "<?xml version=\"1.0\"?>"
   "<root xmlns=\"urn:schemas-upnp-org:device-1-0\">"
@@ -123,12 +126,15 @@ const char HUE_DESCRIPTION_XML[] PROGMEM =
   "<URLBase>http://{x1:80/</URLBase>"
   "<device>"
     "<deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>"
-    "<friendlyName>Amazon-Echo-HA-Bridge ({x1)</friendlyName>"
+    "<friendlyName>{x4</friendlyName>"
+    "<presentationURL>index.html</presentationURL>"
 //    "<friendlyName>Philips hue ({x1)</friendlyName>"
-    "<manufacturer>Royal Philips Electronics</manufacturer>"
-    "<modelDescription>Philips hue Personal Wireless Lighting</modelDescription>"
-    "<modelName>Philips hue bridge 2012</modelName>"
+    "<manufacturer>iTead</manufacturer>"
+    "<manufacturerURL>http://smartlife.tech</manufacturerURL>"
+    "<modelDescription>iTead Intelligent Systems Co., LTD</modelDescription>"
+    "<modelName>{x4</modelName>"
     "<modelNumber>929000226503</modelNumber>"
+    "<modelURL>http://smartlife.tech</modelURL>"
     "<serialNumber>{x3</serialNumber>"
     "<UDN>uuid:{x2</UDN>"
   "</device>"
@@ -195,6 +201,7 @@ String GetHueUserId(void)
   return String(userid);
 }
 
+// erocm123: modify for Hubitat / SmartThings detection
 void HandleUpnpSetupHue(void)
 {
   AddLog_P(LOG_LEVEL_DEBUG, S_LOG_HTTP, PSTR(D_HUE_BRIDGE_SETUP));
@@ -202,6 +209,8 @@ void HandleUpnpSetupHue(void)
   description_xml.replace("{x1", WiFi.localIP().toString());
   description_xml.replace("{x2", HueUuid());
   description_xml.replace("{x3", HueSerialnumber());
+  //erocm123: New Method of obtaining module name
+  description_xml.replace("{x4", ModuleName().c_str()?ModuleName().c_str():"Sonoff");
   WSSend(200, CT_XML, description_xml);
 }
 
@@ -663,8 +672,9 @@ void HandleHueApi(String *path)
 bool Xdrv20(uint8_t function)
 {
   bool result = false;
-
-  if (devices_present && (EMUL_HUE == Settings.flag2.emulation)) {
+  //erocm123: This enables description.xml even when there isn't a controllable device (such as for the Sonoff SC or Bridge)
+  //if (devices_present && (EMUL_HUE == Settings.flag2.emulation)) {
+  if (EMUL_HUE == Settings.flag2.emulation) {
     switch (function) {
       case FUNC_WEB_ADD_HANDLER:
         WebServer->on("/description.xml", HandleUpnpSetupHue);
